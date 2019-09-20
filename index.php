@@ -145,9 +145,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="/inc/js/hammer.min.js"></script>
-    <script src="/inc/js/jquery.scrolllock.js"></script>
-    <script src="/inc/js/lightbox.js"></script>
+    <script src="/inc/js/lightbox.min.js"></script>
     <script src="/inc/js/main.js"></script>
   </body>
 </html>
