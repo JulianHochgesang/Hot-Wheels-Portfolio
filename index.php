@@ -14,13 +14,23 @@
   $connection = new mysqli($db_host, $db_user, $db_password, $db_name);
 
   if ($connection->connect_error) {
-    die("Verbindung zur Datenbank fehlgeschlagen: " . $connection->connect_error);
+    die("Verbindung zur Datenbank ist fehlgeschlagen: " . $connection->connect_error);
   }
 
   // Main SQL query (fallback / counter)
   $mainSql = "SELECT * FROM cars ORDER BY Name";
   $mainResult = $connection->query($mainSql);
   $numberOfRows = mysqli_num_rows($mainResult);
+
+  // Create table if it doesn't exist
+  $createSql = "CREATE TABLE cars (
+    ID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    Image VARCHAR(255) NOT NULL,
+    Name VARCHAR(255) NOT NULL
+  )";
+  if ($mainResult === FALSE) {
+    $connection->query($createSql);
+  }
 
   // Search SQL query
   $searchWord = $_POST['search_string'];

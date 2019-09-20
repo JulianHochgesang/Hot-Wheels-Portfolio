@@ -10,3 +10,4 @@
 - [ ] Categorizing
 - [x] Searching
 - [x] .env credential handling
+- [x] Add script handling support
