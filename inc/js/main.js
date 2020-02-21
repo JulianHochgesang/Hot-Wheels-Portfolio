@@ -12,7 +12,7 @@
   $('.fahrzeug').each(function() {
     $(this).find('#edit_car').click(function(e) {
       e.preventDefault();
-      $edit_id = $(this).closest('.fahrzeug-image').find('.fahrzeug-id').text();
+      $edit_id = $(this).closest('.fahrzeug').attr('fahrzeugid');
       $('#edit_id_span').text($edit_id);
       $('#edit_id').val($edit_id);
       $('#modal_edit').fadeIn(300);

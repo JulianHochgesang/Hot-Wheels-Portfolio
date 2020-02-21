@@ -37,8 +37,9 @@
 
 
   $add_name = mysqli_real_escape_string($connection, $_REQUEST['add_name']);
+  $add_category = mysqli_real_escape_string($connection, $_REQUEST['add_category']);
 
-  $sql = "INSERT INTO cars (Image, Name) VALUES ('$imagename', '$add_name')";
+  $sql = "INSERT INTO cars (Image, Name, Category) VALUES ('$imagename', '$add_name', '$add_category')";
   if (mysqli_query($connection, $sql)){
       echo "Das Fahrzeug wurde erfolgreich angelegt.";
   } else {

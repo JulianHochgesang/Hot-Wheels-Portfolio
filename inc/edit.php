@@ -38,15 +38,48 @@
 
   $edit_id = mysqli_real_escape_string($connection, $_REQUEST['edit_id']);
   $edit_name = mysqli_real_escape_string($connection, $_REQUEST['edit_name']);
+  $edit_category = mysqli_real_escape_string($connection, $_REQUEST['edit_category']);
 
-  if (strlen($imagename) > 0 && strlen($edit_name) > 0) {
-    $sql = "UPDATE cars SET Image='$imagename', Name='$edit_name' WHERE ID=$edit_id";
+  if (strlen($imagename) > 0 && strlen($edit_name) > 0 && strlen($edit_category) > 0) {
+    if ($edit_category == 'null') {
+      $sql = "UPDATE cars SET Image='$imagename', Name='$edit_name', Category=NULL WHERE ID=$edit_id";
+    }
+    else {
+      $sql = "UPDATE cars SET Image='$imagename', Name='$edit_name', Category='$edit_category' WHERE ID=$edit_id";
+    }
   }
-  elseif (strlen($imagename) > 0 && strlen($edit_name) <= 0) {
+  elseif (strlen($imagename) > 0 && strlen($edit_name) <= 0 && strlen($edit_category) <= 0) {
     $sql = "UPDATE cars SET Image='$imagename' WHERE ID=$edit_id";
   }
-  elseif (strlen($imagename) <= 0 && strlen($edit_name) > 0) {
+  elseif (strlen($imagename) <= 0 && strlen($edit_category) <= 0 && strlen($edit_name) > 0) {
     $sql = "UPDATE cars SET Name='$edit_name' WHERE ID=$edit_id";
+  }
+  elseif (strlen($edit_category) > 0 && strlen($edit_name) <= 0 && strlen($imagename) <= 0) {
+    if ($edit_category == 'null') {
+      $sql = "UPDATE cars SET Category=NULL WHERE ID=$edit_id";
+    }
+    else {
+      $sql = "UPDATE cars SET Category='$edit_category' WHERE ID=$edit_id";     
+    }
+  }
+  elseif (strlen($edit_category) > 0 && strlen($edit_name) > 0 && strlen($imagename) <= 0) {
+    if ($edit_category == 'null') {
+      $sql = "UPDATE cars SET Name='$edit_name', Category=NULL WHERE ID=$edit_id";
+    }
+    else {
+      $sql = "UPDATE cars SET Name='$edit_name', Category='$edit_category' WHERE ID=$edit_id";
+    }
+  }
+  elseif (strlen($edit_category) > 0 && strlen($imagename) > 0 && strlen($edit_name) <= 0) {
+    if ($edit_category == 'null') {
+      $sql = "UPDATE cars SET Image='$imagename', Category=NULL WHERE ID=$edit_id";
+    }
+    else {
+      $sql = "UPDATE cars SET Image='$imagename', Category='$edit_category' WHERE ID=$edit_id";
+    }
+  }
+  elseif (strlen($edit_name) > 0 && strlen($imagename) > 0 && strlen($edit_category) <= 0) {
+    $sql = "UPDATE cars SET Name='$edit_name', Image='$imagename' WHERE ID=$edit_id";
   }
   else {
     $sql = "";

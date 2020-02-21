@@ -22,14 +22,22 @@
   $mainResult = $connection->query($mainSql);
   $numberOfRows = mysqli_num_rows($mainResult);
 
-  // Create table if it doesn't exist
-  $createSql = "CREATE TABLE cars (
+  // Create tables if they don't exist
+  $createCarsSql = "CREATE TABLE cars (
     ID INT(11) AUTO_INCREMENT PRIMARY KEY,
     Image VARCHAR(255) NOT NULL,
-    Name VARCHAR(255) NOT NULL
+    Name VARCHAR(255) NOT NULL,
+    Category VARCHAR(255) NOT NULL
   )";
   if ($mainResult === FALSE) {
-    $connection->query($createSql);
+    $connection->query($createCarsSql);
+  }
+  $createCategoriesSql = "CREATE TABLE categories (
+    ID INT(11) AUTO_INCREMENT PRIMARY KEY,
+    CategoryName VARCHAR(255) NOT NULL
+  )";
+  if ($categoryResult === FALSE) {
+    $connection->query($createCategoriesSql);
   }
 
   // Search SQL query
@@ -40,7 +48,17 @@
   else {
     $sql = "SELECT * FROM cars ORDER BY Name";
   }
-  $result = $connection->query($sql);  
+  $result = $connection->query($sql);
+
+  // Category filter SQL query
+  $categorySet = $_POST['category_string'];
+  if (strlen($categorySet) > 0) {
+    $categorySql = "SELECT * FROM categories WHERE (ID='".$categorySet."')";
+  }
+  else {
+    $categorySql = "SELECT * FROM categories ORDER BY CategoryName";
+  }
+  $categoryResult = $connection->query($categorySql);
 
 ?>
 
@@ -76,6 +94,38 @@
               <button type="submit" id="search_reset_button">Suche zurücksetzen</button>
             </form>
           </div>
+          <div class="input_wrap categories">
+            <p>Kategorien</p>
+            <form enctype="multipart/form-data" action="/inc/category.php" method="post">
+              <input type="text" name="category_name" id="category_name" placeholder="Neue Kategorie ...">
+              <button type="submit" id="category_button"><span class="ri ri-tag"></span></button>
+            </form>
+            <?php if ($categoryResult->num_rows > 0) : ?>
+              <div class="categories_list">
+                <?php while($rowC = $categoryResult->fetch_assoc()) : ?>
+                  <div class="category-single">
+                    <form method="post" class="cl-form-1">
+                      <input type="hidden" name="category_string" id="category_string" value="<?php echo $rowC["ID"]; ?>">
+                      <button type="submit" class="category_button"><?php echo $rowC["CategoryName"]; ?></button>
+                    </form>
+                    <form method="post" enctype="multipart/form-data" action="/inc/category.php" class="cl-form-2">
+                      <input type="hidden" name="category_delete_id" id="category_delete_id" value="<?php echo $rowC["ID"]; ?>">
+                      <button type="submit" class="category_delete_button"><span class="ri ri-trash"></span></button>
+                    </form>
+                  </div>
+                <?php
+                  $categories_for_form .= '<option value="'.$rowC["CategoryName"].'">'.$rowC["CategoryName"].'</option>';
+                  endwhile;
+                ?>
+                <?php if (strlen($categorySet) > 0) : ?>
+                  <form method="post">
+                    <input type="hidden" name="category_string" id="category_string" value="">
+                    <button type="submit" id="category_reset_button">Auswahl zurücksetzen</button>
+                  </form>
+                <?php endif;?>
+              </div>
+            <?php endif;?>
+          </div>
           <?php if ($mainResult->num_rows > 0) : ?>
             <div class="info_cars">
               <span><?php echo $numberOfRows; ?></span>
@@ -91,10 +141,12 @@
       <div class="content-inner">
         <?php if ($result->num_rows > 0) : ?>
           <?php while($row = $result->fetch_assoc()) : ?>
-            <div class="fahrzeug">
+            <div class="fahrzeug" fahrzeugid="<?php echo $row["ID"]; ?>">
               <div class="fahrzeug-inner">
                 <div class="fahrzeug-image">
-                  <div class="fahrzeug-id"><?php echo $row["ID"]; ?></div>
+                  <?php if (strlen($row["Category"]) > 0) : ?>
+                    <div class="fahrzeug-category"><?php echo $row["Category"]; ?></div>
+                  <?php endif; ?>
                   <div class="fahrzeug-delete">
                     <form action="/inc/delete.php" method="post" onsubmit="return confirm('Möchtest du das Fahrzeug wirklich löschen?');">
                       <input type="hidden" id="delete_car_id" name="delete_car_id" value="<?php echo $row["ID"]; ?>">
@@ -124,6 +176,16 @@
         <form enctype="multipart/form-data" action="/inc/add.php" method="post">
           <input type="file" accept="image/*" name="add_image" id="add_image">
           <input type="text" name="add_name" id="add_name" placeholder="Name des Fahrzeugs">
+          <?php if ($categoryResult->num_rows > 0) : ?>
+            <label>Kategorie:</label>
+            <div class="modal-select-outer">
+              <select name="add_category" id="add_category">
+                <option value="null">Keine Kategorie</option>
+                <?php echo $categories_for_form; ?>
+              </select>
+              <span class="ri ri-arrow-down"></span>
+            </div>
+          <?php endif;?>
           <input type="submit" value="Fahrzeug hinzufügen">
           <div class="form_button" id="add_abort">Abbrechen</div>
         </form>
@@ -138,6 +200,16 @@
           <input type="hidden" name="edit_id" id="edit_id">
           <input type="file" accept="image/*" name="edit_image" id="edit_image">
           <input type="text" name="edit_name" id="edit_name" placeholder="Name des Fahrzeugs">
+          <?php if ($categoryResult->num_rows > 0) : ?>
+            <label>Kategorie:</label>
+            <div class="modal-select-outer">
+              <select name="edit_category" id="edit_category">
+                <option value="null">Keine Kategorie</option>
+                <?php echo $categories_for_form; ?>
+              </select>
+              <span class="ri ri-arrow-down"></span>
+            </div>
+          <?php endif;?>
           <input type="submit" value="Fahrzeug speichern">
           <div class="form_button" id="edit_abort">Abbrechen</div>
         </form>
