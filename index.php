@@ -53,7 +53,13 @@
   // Category filter SQL query
   $categorySet = $_POST['category_string'];
   if (strlen($categorySet) > 0) {
+    $category_name_by_id_query = "SELECT CategoryName FROM categories WHERE ID=$categorySet";
+    $category_name_by_id_result = $connection->query($category_name_by_id_query);
+    $cnb_id_row = mysqli_fetch_array($category_name_by_id_result);
+    $category_name_by_id = $cnb_id_row['CategoryName'];
     $categorySql = "SELECT * FROM categories WHERE (ID='".$categorySet."')";
+    $categorySearchSql = "SELECT * FROM cars WHERE (Category='".$category_name_by_id."')";
+    $result = $connection->query($categorySearchSql);
   }
   else {
     $categorySql = "SELECT * FROM categories ORDER BY CategoryName";
@@ -81,18 +87,22 @@
           <img src="/assets/Hot_wheels_logo.svg" />
         </div>
         <div class="navigation">
-          <div class="link_wrap">
+          <div class="link_wrap add_car">
+            <p>Fahrzeug hinzufügen</p>
             <a href="#" id="add_car"><span class="ri ri-plus-circle"></span></a>
           </div>
-          <div class="input_wrap">
+          <div class="input_wrap search_car">
+            <p>Fahrzeuge finden</p>
             <form method="post">
               <input type="text" name="search_string" id="search_string" placeholder="Suchbegriff ...">
               <button type="submit" id="search_button"><span class="ri ri-search"></span></button>
             </form>
-            <form method="post">
-              <input type="hidden" name="search_string" id="search_string" value="">
-              <button type="submit" id="search_reset_button">Suche zurücksetzen</button>
-            </form>
+            <?php if (strlen($searchWord) > 0) : ?>
+              <form method="post">
+                <input type="hidden" name="search_string" id="search_string" value="">
+                <button type="submit" id="search_reset_button">Suche zurücksetzen</button>
+              </form>
+            <?php endif;?>
           </div>
           <div class="input_wrap categories">
             <p>Kategorien</p>

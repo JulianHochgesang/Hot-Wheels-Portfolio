@@ -24,8 +24,8 @@ body, html {margin: 0; padding: 0; font-family: 'Lato', sans-serif;}
 #search_button {float: left; font-size: 20px; line-height: 19px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: #fff; width: 40px; padding: 10px; box-sizing: border-box; color: #000; border: none; border-top-right-radius: 2px; border-bottom-right-radius: 2px; cursor: pointer; transition: all .3s;}
 #search_button:hover {background: #eee;}
 #search_reset_button {appearance: none; -webkit-appearance: none; -moz-appearance: none; background: none; border: none; color: #fff; font-size: 12px; text-decoration: underline; cursor: pointer; padding: 0; text-transform: uppercase; display: inline-block; margin-top: 10px;}
-.categories {margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.3);}
-.categories p {text-transform: uppercase; color: #fff; font-size: 20px; margin-bottom: 10px; margin-top: 0;}
+.categories, .search_car {margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.3);}
+.categories p, .add_car p, .search_car p {text-transform: uppercase; color: #fff; font-size: 20px; margin-bottom: 10px; margin-top: 0;}
 #category_button {float: left; font-size: 20px; line-height: 19px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: #fff; width: 40px; padding: 10px; box-sizing: border-box; color: #000; border: none; border-top-right-radius: 2px; border-bottom-right-radius: 2px; cursor: pointer; transition: all .3s;}
 #category_button:hover {background: #eee;}
 .categories_list {float: left; width: 100%; margin-top: 10px;}
